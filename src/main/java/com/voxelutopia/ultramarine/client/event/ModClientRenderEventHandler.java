@@ -28,6 +28,7 @@ public class ModClientRenderEventHandler {
 
     private static void setRenderLayers(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
+            // Should be removed soon
             ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ABACUS.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BRUSH_TOOLS.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOTTLE_GOURD.get(), RenderType.cutout());

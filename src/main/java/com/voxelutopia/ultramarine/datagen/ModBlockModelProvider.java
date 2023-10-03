@@ -1,9 +1,9 @@
 package com.voxelutopia.ultramarine.datagen;
 
 import com.voxelutopia.ultramarine.data.registry.BlockRegistry;
+import com.voxelutopia.ultramarine.world.block.*;
 import com.voxelutopia.ultramarine.world.block.state.ChiralBlockType;
 import com.voxelutopia.ultramarine.world.block.state.ModBlockStateProperties;
-import com.voxelutopia.ultramarine.world.block.*;
 import com.voxelutopia.ultramarine.world.block.state.OrientableBlockType;
 import com.voxelutopia.ultramarine.world.block.state.StackableBlockType;
 import net.minecraft.core.Direction;
@@ -18,6 +18,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +26,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.voxelutopia.ultramarine.world.block.state.ModBlockStateProperties.*;
+import static com.voxelutopia.ultramarine.world.block.state.ModBlockStateProperties.ON_FACE_DIRECTION;
+import static com.voxelutopia.ultramarine.world.block.state.ModBlockStateProperties.SHIFTED;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.*;
 
 @SuppressWarnings("unused")
 public class ModBlockModelProvider extends BlockStateProvider {
-
+    // TODO: Needs update for new RenderType options
     public static final String BLOCK = "block/";
     private final Map<Pair<Direction, Direction>, Integer> rotations = Map.of(
             Pair.of(Direction.NORTH, Direction.EAST), 0,
@@ -351,17 +353,17 @@ public class ModBlockModelProvider extends BlockStateProvider {
         simpleBlock(block, models().getExistingFile(modLoc(BLOCK + name(block))));
     }
 
-    private void slabAndStairs(Block baseBlock, Block slabBlock, Block stairBlock){
-        slabBlock((SlabBlock) slabBlock, baseBlock.getRegistryName(), blockLoc(baseBlock));
-        stairsBlock((StairBlock) stairBlock, blockLoc(baseBlock));
+    private void slabAndStairs(Block baseBlock, Block slabBlock, Block stairBlock) {
+        slabBlock((SlabBlock) slabBlock, ForgeRegistries.BLOCKS.getKey(baseBlock), blockLoc(baseBlock));
+        stairsBlockWithRenderType((StairBlock) stairBlock, blockLoc(baseBlock), "cutout");
     }
 
     private void wall(Block baseBlock, Block wallBlock){
-        wallBlock((WallBlock)wallBlock, wallBlock.getRegistryName().getPath(), blockLoc(baseBlock));
+        wallBlockWithRenderType((WallBlock) wallBlock, ForgeRegistries.BLOCKS.getKey(wallBlock).getPath(), blockLoc(baseBlock), "cutout");
     }
 
     private void fence(Block baseBlock, Block fenceBlock){
-        fenceBlock((FenceBlock)fenceBlock, fenceBlock.getRegistryName().getPath(), blockLoc(baseBlock));
+        fenceBlockWithRenderType((FenceBlock) fenceBlock, ForgeRegistries.BLOCKS.getKey(fenceBlock).getPath(), blockLoc(baseBlock), "cutout");
     }
 
     private void wallSideBlock(Block block){
@@ -424,7 +426,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     //TODO use chiralWS
     public void chiralDirectionalBlock(Block block) {
         directionalBlock(block, state -> {
-            String path = Objects.requireNonNull(block.getRegistryName()).getPath();
+            String path = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
             if (state.hasProperty(ModBlockStateProperties.CHIRAL_BLOCK_TYPE)){
                 ChiralBlockType chiralBlockType = state.getValue(ModBlockStateProperties.CHIRAL_BLOCK_TYPE);
                 if (chiralBlockType == ChiralBlockType.LEFT || chiralBlockType == ChiralBlockType.TOP){
@@ -447,10 +449,10 @@ public class ModBlockModelProvider extends BlockStateProvider {
     private void shiftedDirectionalBlock(Block block, int rotation) {
         getVariantBuilder(block).forAllStates(blockState -> {
             if (!blockState.getValue(ModBlockStateProperties.SHIFTED))
-                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + block.getRegistryName().getPath())))
+                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + ForgeRegistries.BLOCKS.getKey(block).getPath())))
                         .rotationY(rotation + (int) blockState.getValue(HORIZONTAL_FACING).toYRot()).build();
             else
-                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + block.getRegistryName().getPath() + "_shifted")))
+                return ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + ForgeRegistries.BLOCKS.getKey(block).getPath() + "_shifted")))
                         .rotationY(rotation + (int) blockState.getValue(HORIZONTAL_FACING).toYRot()).build();
         });
     }
@@ -462,7 +464,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     private void axisBlock(Block block) {
         getVariantBuilder(block).forAllStates(blockState -> {
             ConfiguredModel.Builder<?> builder;
-            builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + block.getRegistryName().getPath())));
+            builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + ForgeRegistries.BLOCKS.getKey(block).getPath())));
             if (blockState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
                 builder.rotationY(90);
             return builder.build();
@@ -473,10 +475,10 @@ public class ModBlockModelProvider extends BlockStateProvider {
         getVariantBuilder(block).forAllStates(blockState -> {
             ConfiguredModel.Builder<?> builder;
             if (!blockState.getValue(ModBlockStateProperties.SHIFTED)) {
-                builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + block.getRegistryName().getPath())));
+                builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + ForgeRegistries.BLOCKS.getKey(block).getPath())));
             }
             else {
-                builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + block.getRegistryName().getPath() + "_shifted")));
+                builder = ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(BLOCK + ForgeRegistries.BLOCKS.getKey(block).getPath() + "_shifted")));
             }
             if (blockState.getValue(HORIZONTAL_AXIS) == Direction.Axis.X)
                 builder.rotationY(90);
@@ -491,7 +493,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     private void decorativeBlock(DecorativeBlock block, int rotation){
         getVariantBuilder(block).forAllStates(blockState -> {
             var modelFile = ConfiguredModel.builder();
-            String blockPath = Objects.requireNonNull(block.getRegistryName()).getPath();
+            String blockPath = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
             return getDecorativeBlockConfiguredModels(block, blockState, blockPath, modelFile, rotation);
         });
     }
@@ -505,7 +507,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
             var modelFile = ConfiguredModel.builder();
             int bites = blockState.getValue(ModBlockStateProperties.BITES);
             bites = Math.min(bites, block.getMaxBites());
-            ResourceLocation resourceLocation = Objects.requireNonNull(block.getRegistryName());
+            ResourceLocation resourceLocation = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block));
             String blockPath = resourceLocation.getPath() + "_" + bites;
             return getDecorativeBlockConfiguredModels(block, blockState, blockPath, modelFile, rotation);
         });
@@ -514,7 +516,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     private void censer(Censer block, int rotation){
         getVariantBuilder(block).forAllStates(blockState -> {
             var modelFile = ConfiguredModel.builder();
-            ResourceLocation resourceLocation = Objects.requireNonNull(block.getRegistryName());
+            ResourceLocation resourceLocation = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block));
             String blockPath = blockState.getValue(LIT) ? "lit_" + resourceLocation.getPath() : resourceLocation.getPath();
             return getDecorativeBlockConfiguredModels(block, blockState, blockPath, modelFile, rotation);
         });
@@ -538,7 +540,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private void vegetableBasket(StackableHalfBlock block){
-        String blockName = Objects.requireNonNull(block.getRegistryName()).getPath();
+        String blockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
         getVariantBuilder(block).forAllStates(blockState -> {
             StackableBlockType type = blockState.getValue(ModBlockStateProperties.STACKABLE_BLOCK_TYPE);
             switch (type){
@@ -556,12 +558,12 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private void sideBottomTop(Block block){
-        String blockName = Objects.requireNonNull(block.getRegistryName()).getPath();
+        String blockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
         sideBottomTop(block, modLoc(BLOCK + blockName + "_side"), modLoc(BLOCK + blockName + "_bottom"), modLoc(BLOCK + blockName + "_top"));
     }
 
     private void sideBottomTop(Block block, ResourceLocation side, ResourceLocation bottom, ResourceLocation top){
-        String blockName = Objects.requireNonNull(block.getRegistryName()).getPath();
+        String blockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
         var model = models().cubeBottomTop(blockName, side, bottom, top);
         simpleBlock(block, model);
     }
@@ -620,7 +622,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private void directionalSideBottomTop(Block block, ResourceLocation side, ResourceLocation bottom, ResourceLocation top){
-        String blockName = Objects.requireNonNull(block.getRegistryName()).getPath();
+        String blockName = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
         var model = models().cubeBottomTop(blockName, side, bottom, top);
         directionalBlock(block, model);
     }
@@ -642,7 +644,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private void slabSideEnd(Block block, Block full, ResourceLocation side, ResourceLocation end){
-        slabBlock((SlabBlock) block, full.getRegistryName(), side, end, end);
+        slabBlock((SlabBlock) block, ForgeRegistries.BLOCKS.getKey(full), side, end, end);
     }
 
     private void slabSideEndNoFull(Block block, ResourceLocation side, ResourceLocation end){
@@ -699,7 +701,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private void carvedWoodenSlab(Block slab, Block full){
-        slabBlock((SlabBlock) slab, full.getRegistryName(), sideLoc(slab), blockLoc(full), blockLoc(full));
+        slabBlock((SlabBlock) slab, ForgeRegistries.BLOCKS.getKey(full), sideLoc(slab), blockLoc(full), blockLoc(full));
     }
 
     private ResourceLocation modBlockLoc(Block block){
@@ -889,7 +891,7 @@ public class ModBlockModelProvider extends BlockStateProvider {
     }
 
     private String name(Block block) {
-        return Objects.requireNonNull(block.getRegistryName()).getPath();
+        return Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).getPath();
     }
 
     @NotNull

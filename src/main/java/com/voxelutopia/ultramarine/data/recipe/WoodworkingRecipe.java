@@ -9,14 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleItemRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
-
 public class WoodworkingRecipe extends SingleItemRecipe {
-
     protected final Ingredient ingredient;
     protected final ItemStack result;
     protected final ResourceLocation id;
@@ -104,25 +104,25 @@ public class WoodworkingRecipe extends SingleItemRecipe {
             pBuffer.writeItem(pRecipe.result);
         }
 
-        @Override
-        public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
-            return INSTANCE;
-        }
+        //@Override
+        //public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+        //    return INSTANCE;
+        //}
 
-        @Nullable
-        @Override
-        public ResourceLocation getRegistryName() {
-            return ID;
-        }
+        //@Nullable
+        //@Override
+        //public ResourceLocation getRegistryName() {
+        //    return ID;
+        //}
 
-        @Override
-        public Class<RecipeSerializer<?>> getRegistryType() {
-            return Serializer.castClass(RecipeSerializer.class);
-        }
+        //@Override
+        //public Class<RecipeSerializer<?>> getRegistryType() {
+        //    return Serializer.castClass(RecipeSerializer.class);
+        //}
 
         @SuppressWarnings("unchecked")
         private static <G> Class<G> castClass(Class<?> cls) {
-            return (Class<G>)cls;
+            return (Class<G>) cls;
         }
 
     }

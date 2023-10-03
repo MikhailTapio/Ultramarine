@@ -244,25 +244,25 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @SuppressWarnings("null")
     private static void quadComposeRecipe(Item part, Item combined, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        assert part.getRegistryName() != null;
+        assert ForgeRegistries.ITEMS.getKey(part) != null;
         ShapedRecipeBuilder.shaped(combined, 1)
                 .define('A', part)
                 .pattern("AA")
                 .pattern("AA")
-                .unlockedBy("has_" + part.getRegistryName().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(part))
+                .unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(part).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(part))
                 .save(pFinishedRecipeConsumer);
     }
 
     private static void quadDecomposeRecipe(Item part, Item combined, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        assert combined.getRegistryName() != null;
+        assert ForgeRegistries.ITEMS.getKey(combined) != null;
         ShapelessRecipeBuilder.shapeless(part, 4).requires(combined)
-                .unlockedBy("has_" + combined.getRegistryName().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(combined))
+                .unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(combined).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(combined))
                 .save(pFinishedRecipeConsumer);
     }
 
-    private static void stonePolishing(Item raw, Item polished, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String rawPath = Objects.requireNonNull(raw.getRegistryName()).getPath();
-        String polishedPath = Objects.requireNonNull(polished.getRegistryName()).getPath();
+    private static void stonePolishing(Item raw, Item polished, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String rawPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(raw)).getPath();
+        String polishedPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(polished)).getPath();
         ShapedRecipeBuilder.shaped(polished, 4)
                 .define('A', raw)
                 .pattern("AA")
@@ -275,10 +275,10 @@ public class ModRecipeProvider extends RecipeProvider {
                         new ResourceLocation(DataGenerators.MOD_ID, polishedPath + "_from_stonecutting"));
     }
 
-    private static void blockDyeing(Item block, Item dye, Item output, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String blockPath = Objects.requireNonNull(block.getRegistryName()).getPath();
-        String dyePath = Objects.requireNonNull(dye.getRegistryName()).getPath();
-        String outputPath = Objects.requireNonNull(output.getRegistryName()).getPath();
+    private static void blockDyeing(Item block, Item dye, Item output, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String blockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(block)).getPath();
+        String dyePath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(dye)).getPath();
+        String outputPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).getPath();
         ShapelessRecipeBuilder.shapeless(output).requires(block).requires(dye)
                 .unlockedBy("has_" + blockPath, InventoryChangeTrigger.TriggerInstance.hasItems(block))
                 .save(pFinishedRecipeConsumer, new ResourceLocation(DataGenerators.MOD_ID, outputPath));
@@ -298,10 +298,10 @@ public class ModRecipeProvider extends RecipeProvider {
                 .save(pFinishedRecipeConsumer, new ResourceLocation(DataGenerators.MOD_ID, name(output)));
     }
 
-    private static void brickMixture(Item brick, int brickAmount, Item additive, Item output, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String brickPath = Objects.requireNonNull(brick.getRegistryName()).getPath();
-        String additivePath = Objects.requireNonNull(additive.getRegistryName()).getPath();
-        String outputPath = Objects.requireNonNull(output.getRegistryName()).getPath();
+    private static void brickMixture(Item brick, int brickAmount, Item additive, Item output, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String brickPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(brick)).getPath();
+        String additivePath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(additive)).getPath();
+        String outputPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(output)).getPath();
         ShapelessRecipeBuilder.shapeless(output, brickAmount).requires(brick, brickAmount).requires(additive)
                 .unlockedBy("has_" + brickPath, InventoryChangeTrigger.TriggerInstance.hasItems(brick))
                 .save(pFinishedRecipeConsumer, new ResourceLocation(DataGenerators.MOD_ID, outputPath));
@@ -314,10 +314,10 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy(itemUnlockName(input), itemCriterion(input)).save(pFinishedRecipeConsumer, new ResourceLocation(DataGenerators.MOD_ID, name(output) + "_from_blasting"));
     }
 
-    private static void stoneSlabAndStairsRecipe(Item baseBlock, Item slabBlock, Item stairBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String baseBlockPath = Objects.requireNonNull(baseBlock.getRegistryName()).getPath();
-        String stairsBlockPath = Objects.requireNonNull(stairBlock.getRegistryName()).getPath();
-        String slabBlockPath = Objects.requireNonNull(slabBlock.getRegistryName()).getPath();
+    private static void stoneSlabAndStairsRecipe(Item baseBlock, Item slabBlock, Item stairBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String baseBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(baseBlock)).getPath();
+        String stairsBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stairBlock)).getPath();
+        String slabBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(slabBlock)).getPath();
         String baseBlockAdvancement = "has_" + baseBlockPath;
         InventoryChangeTrigger.TriggerInstance trigger = InventoryChangeTrigger.TriggerInstance.hasItems(baseBlock);
 
@@ -345,10 +345,10 @@ public class ModRecipeProvider extends RecipeProvider {
                         new ResourceLocation(DataGenerators.MOD_ID, slabBlockPath + "_from_stonecutting"));
     }
 
-    private static void woodSlabAndStairsRecipe(Item baseBlock, Item slabBlock, Item stairBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String baseBlockPath = Objects.requireNonNull(baseBlock.getRegistryName()).getPath();
-        String stairsBlockPath = Objects.requireNonNull(stairBlock.getRegistryName()).getPath();
-        String slabBlockPath = Objects.requireNonNull(slabBlock.getRegistryName()).getPath();
+    private static void woodSlabAndStairsRecipe(Item baseBlock, Item slabBlock, Item stairBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String baseBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(baseBlock)).getPath();
+        String stairsBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(stairBlock)).getPath();
+        String slabBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(slabBlock)).getPath();
         String baseBlockAdvancement = "has_" + baseBlockPath;
         InventoryChangeTrigger.TriggerInstance trigger = InventoryChangeTrigger.TriggerInstance.hasItems(baseBlock);
 
@@ -377,9 +377,9 @@ public class ModRecipeProvider extends RecipeProvider {
     }
 
 
-    private static void wallRecipe(Item baseBlock, Item wallBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String baseBlockPath = Objects.requireNonNull(baseBlock.getRegistryName()).getPath();
-        String wallBlockPath = Objects.requireNonNull(wallBlock.getRegistryName()).getPath();
+    private static void wallRecipe(Item baseBlock, Item wallBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String baseBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(baseBlock)).getPath();
+        String wallBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(wallBlock)).getPath();
         String baseBlockAdvancement = "has_" + baseBlockPath;
         InventoryChangeTrigger.TriggerInstance trigger = InventoryChangeTrigger.TriggerInstance.hasItems(baseBlock);
         ShapedRecipeBuilder.shaped(wallBlock, 6)
@@ -388,16 +388,16 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("BBB")
                 .unlockedBy(baseBlockAdvancement, trigger)
                 .save(pFinishedRecipeConsumer,
-                        new ResourceLocation(DataGenerators.MOD_ID,wallBlockPath + "_from_crafting"));
+                        new ResourceLocation(DataGenerators.MOD_ID, wallBlockPath + "_from_crafting"));
         SingleItemRecipeBuilder.stonecutting(Ingredient.of(baseBlock), wallBlock)
                 .unlockedBy(baseBlockAdvancement, trigger)
                 .save(pFinishedRecipeConsumer,
                         new ResourceLocation(DataGenerators.MOD_ID,wallBlockPath + "_from_stonecutting"));
     }
 
-    private static void fenceRecipe(Item baseBlock, Item fenceBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
-        String baseBlockPath = Objects.requireNonNull(baseBlock.getRegistryName()).getPath();
-        String fenceBlockPath = Objects.requireNonNull(fenceBlock.getRegistryName()).getPath();
+    private static void fenceRecipe(Item baseBlock, Item fenceBlock, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+        String baseBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(baseBlock)).getPath();
+        String fenceBlockPath = Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(fenceBlock)).getPath();
         String baseBlockAdvancement = "has_" + baseBlockPath;
         InventoryChangeTrigger.TriggerInstance trigger = InventoryChangeTrigger.TriggerInstance.hasItems(baseBlock);
         ShapedRecipeBuilder.shaped(fenceBlock, 3)
@@ -407,7 +407,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("BSB")
                 .unlockedBy(baseBlockAdvancement, trigger)
                 .save(pFinishedRecipeConsumer,
-                        new ResourceLocation(DataGenerators.MOD_ID,fenceBlockPath + "_from_crafting"));
+                        new ResourceLocation(DataGenerators.MOD_ID, fenceBlockPath + "_from_crafting"));
         woodworking(Ingredient.of(baseBlock), fenceBlock)
                 .unlockedBy(baseBlockAdvancement, trigger)
                 .save(pFinishedRecipeConsumer,
@@ -416,7 +416,7 @@ public class ModRecipeProvider extends RecipeProvider {
 
     private static void polishedPlankRecipe(Item planks, Item polishedPlank, Consumer<FinishedRecipe> pFinishedRecipeConsumer){
         woodworking(Ingredient.of(planks), polishedPlank, 2)
-                .unlockedBy("has_" + planks.getRegistryName().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(planks))
+                .unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(planks).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(planks))
                 .save(pFinishedRecipeConsumer);
     }
 
@@ -464,18 +464,18 @@ public class ModRecipeProvider extends RecipeProvider {
 
     public static void woodworking(Item input, ItemLike pResult, int pCount, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
             var recipe = new SingleItemRecipeBuilder(RecipeSerializerRegistry.WOODWORKING_SERIALIZER.get(), Ingredient.of(input), pResult, pCount);
-            recipe.unlockedBy("has_" + input.getRegistryName().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(input))
+        recipe.unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(input).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(input))
                 .save(pFinishedRecipeConsumer);
     }
 
     public static void woodworking(Ingredient ingredient, ItemLike pResult, int pCount, Item unlockItem, Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         var recipe = new SingleItemRecipeBuilder(RecipeSerializerRegistry.WOODWORKING_SERIALIZER.get(), ingredient, pResult, pCount);
-        recipe.unlockedBy("has_" + unlockItem.getRegistryName().getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(unlockItem))
+        recipe.unlockedBy("has_" + ForgeRegistries.ITEMS.getKey(unlockItem).getPath(), InventoryChangeTrigger.TriggerInstance.hasItems(unlockItem))
                 .save(pFinishedRecipeConsumer);
     }
 
     private static String name(Item item){
-        return Objects.requireNonNull(item.getRegistryName()).getPath();
+        return Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)).getPath();
     }
 
 }

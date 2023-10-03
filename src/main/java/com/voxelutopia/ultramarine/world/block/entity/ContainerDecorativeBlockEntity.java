@@ -8,8 +8,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -46,7 +44,7 @@ public class ContainerDecorativeBlockEntity extends RandomizableContainerBlockEn
 
     @Override
     protected Component getDefaultName() {
-        return new TextComponent(new TranslatableComponent("container." +  Registry.BLOCK.getKey(block).getPath()).getString());
+        return Component.translatable("container." + Registry.BLOCK.getKey(block).getPath());
     }
 
     @Override
