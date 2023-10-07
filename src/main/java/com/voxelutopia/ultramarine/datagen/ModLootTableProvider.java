@@ -7,7 +7,8 @@ import com.voxelutopia.ultramarine.world.block.BaseBlockProperty;
 import com.voxelutopia.ultramarine.world.block.BaseBlockPropertyHolder;
 import com.voxelutopia.ultramarine.world.block.ConsumableDecorativeBlock;
 import com.voxelutopia.ultramarine.world.block.StackableHalfBlock;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -19,11 +20,12 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ModLootTableProvider extends BaseLootTableProvider {
 
-    public ModLootTableProvider(DataGenerator pGenerator) {
-        super(pGenerator);
+    public ModLootTableProvider(PackOutput pOutput, Set<ResourceLocation> pRequiredTables, List<SubProviderEntry> pSubProviders) {
+        super(pOutput, pRequiredTables, pSubProviders);
     }
 
     private static final List<RegistryObject<Block>> NON_SIMPLE_BLOCKS = new ArrayList<>();

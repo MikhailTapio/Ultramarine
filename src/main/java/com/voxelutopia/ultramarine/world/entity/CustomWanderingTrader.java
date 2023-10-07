@@ -2,6 +2,7 @@ package com.voxelutopia.ultramarine.world.entity;
 
 import com.voxelutopia.ultramarine.data.registry.ItemRegistry;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -17,7 +18,6 @@ import net.minecraftforge.network.NetworkHooks;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomWanderingTrader extends WanderingTrader {
 
@@ -45,7 +45,7 @@ public class CustomWanderingTrader extends WanderingTrader {
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

@@ -12,8 +12,8 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTables;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
@@ -42,11 +42,12 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public abstract class BaseLootTableProvider extends LootTableProvider {
@@ -54,13 +55,14 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     private static final Logger LOGGER = Ultramarine.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final LootItemCondition.Builder HAS_SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
-    private static final Set<Item> EXPLOSION_RESISTANT = Stream.of(Blocks.BEDROCK).map(ItemLike::asItem).collect(ImmutableSet.toImmutableSet());;
+    private static final Set<Item> EXPLOSION_RESISTANT = Stream.of(Blocks.BEDROCK).map(ItemLike::asItem).collect(ImmutableSet.toImmutableSet());
+    ;
     protected final Map<Block, LootTable.Builder> lootTables = new HashMap<>();
-    private final DataGenerator generator;
+    private final PackOutput.PathProvider provider;
 
-    public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
-        super(dataGeneratorIn);
-        this.generator = dataGeneratorIn;
+    public BaseLootTableProvider(PackOutput pOutput, Set<ResourceLocation> pRequiredTables, List<SubProviderEntry> pSubProviders) {
+        super(pOutput, pRequiredTables, pSubProviders);
+        this.provider = pOutput.createPathProvider(PackOutput.Target.DATA_PACK, "loot_tables");
     }
 
     protected abstract void addTables();
@@ -163,30 +165,33 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     }
 
     @Override
-    public void run(CachedOutput cache) {
+    public CompletableFuture<?> run(CachedOutput cache) {
         addTables();
 
-        Map<ResourceLocation, LootTable> tables = new HashMap<>();
-        for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
-            tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootContextParamSets.BLOCK).build());
-        }
-        writeTables(cache, tables);
+        return CompletableFuture.allOf(lootTables.entrySet().stream().map(e -> {
+            ResourceLocation r = e.getKey().getLootTable();
+            LootTable l = e.getValue().setParamSet(LootContextParamSets.BLOCK).build();
+            Path path = this.provider.json(r);
+            // TODO: Needs check
+            return DataProvider.saveStable(cache, LootDataType.TABLE.parser().toJsonTree(l), path);
+        }).toArray(CompletableFuture[]::new));
     }
 
-    private void writeTables(CachedOutput cache, Map<ResourceLocation, LootTable> tables) {
-        Path outputFolder = this.generator.getOutputFolder();
-        tables.forEach((key, lootTable) -> {
-            Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
-            try {
-                DataProvider.saveStable(cache, LootTables.serialize(lootTable), path);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't write loot table {}", path, e);
-            }
-        });
-    }
 
-    @Override
-    public String getName() {
-        return DataGenerators.MOD_ID +  " LootTables";
-    }
+    //private void writeTables(CachedOutput cache, Map<ResourceLocation, LootTable> tables) {
+    //    Path outputFolder = this.generator.getPackOutput().getOutputFolder();
+    //    tables.forEach((key, lootTable) -> {
+    //        Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
+    //        DataProvider.saveStable(cache, LootDataType.TABLE.parser().toJsonTree(lootTable), path);
+    //    });
+    //}
+
+    // TODO: Extracted to this#run, needs an extra check
+
+    //@Override
+    //public String getName() {
+    //    return DataGenerators.MOD_ID +  " LootTables";
+    //}
+
+    //TODO: Any alternative needed to be overriden?
 }

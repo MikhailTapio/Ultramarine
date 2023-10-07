@@ -2,27 +2,30 @@ package com.voxelutopia.ultramarine.datagen;
 
 import com.voxelutopia.ultramarine.data.registry.BlockRegistry;
 import com.voxelutopia.ultramarine.world.block.*;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ModBlockTagProvider extends BlockTagsProvider {
 
-    public ModBlockTagProvider(DataGenerator pGenerator, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pGenerator, DataGenerators.MOD_ID, existingFileHelper);
+    public ModBlockTagProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
+        super(pOutput, lookupProvider, DataGenerators.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags() {
+    protected void addTags(HolderLookup.Provider pProvider) {
         BlockRegistry.BLOCKS.getEntries().stream().filter(blockRegistryObject -> blockRegistryObject.get() instanceof BaseBlockPropertyHolder)
-                        .forEach(blockRegistryObject -> {
-                            Block block = blockRegistryObject.get();
-                            BaseBlockProperty property = ((BaseBlockPropertyHolder)block).getProperty();
-                            tag(property.getMaterial().getTool()).add(block);
-                        });
+                .forEach(blockRegistryObject -> {
+                    Block block = blockRegistryObject.get();
+                    BaseBlockProperty property = ((BaseBlockPropertyHolder) block).getProperty();
+                    tag(property.getMaterial().getTool()).add(block);
+                });
         BlockRegistry.BLOCKS.getEntries().stream().filter(blockRegistryObject -> blockRegistryObject.get() instanceof RoofTiles)
                 .forEach(blockRegistryObject -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(blockRegistryObject.get()));
         tag(BlockTags.MINEABLE_WITH_PICKAXE)

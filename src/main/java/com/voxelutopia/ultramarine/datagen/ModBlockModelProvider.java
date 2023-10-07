@@ -7,7 +7,7 @@ import com.voxelutopia.ultramarine.world.block.state.ModBlockStateProperties;
 import com.voxelutopia.ultramarine.world.block.state.OrientableBlockType;
 import com.voxelutopia.ultramarine.world.block.state.StackableBlockType;
 import net.minecraft.core.Direction;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,9 +51,10 @@ public class ModBlockModelProvider extends BlockStateProvider {
             BlockRegistry.GREEN_GLAZED_ROOF_CHARM, -90
     );
 
-    public ModBlockModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, DataGenerators.MOD_ID, existingFileHelper);
+    public ModBlockModelProvider(PackOutput pOutput, ExistingFileHelper existingFileHelper) {
+        super(pOutput, DataGenerators.MOD_ID, existingFileHelper);
     }
+
     @Override
     protected void registerStatesAndModels() {
         simpleBlock(BlockRegistry.CYAN_BRICKS.get());

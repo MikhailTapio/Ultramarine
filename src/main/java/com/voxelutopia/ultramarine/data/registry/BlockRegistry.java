@@ -4,14 +4,12 @@ import com.voxelutopia.ultramarine.Ultramarine;
 import com.voxelutopia.ultramarine.data.ContainerType;
 import com.voxelutopia.ultramarine.data.ModFoods;
 import com.voxelutopia.ultramarine.world.block.*;
-import com.voxelutopia.ultramarine.world.block.BaseAxialBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -817,12 +815,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> HEMATITE_ORE = BLOCKS.register("hematite_ore", () -> new BaseOreBlock(1, 3));
 
     /**
-     *  TOOLS
+     * TOOLS
      */
 
     public static final RegistryObject<Block> WOODWORKING_WORKBENCH = BLOCKS.register("woodworking_workbench", WoodworkingWorkBench::new);
 
-    private static RegistryObject<Block> simpleBlock(String name, Material material) {
-        return BLOCKS.register(name, () -> new Block(BlockBehaviour.Properties.of(material)));
+    private static RegistryObject<Block> simpleBlock(String name) {
+        return BLOCKS.register(name, () -> new Block(BlockBehaviour.Properties.of()));
     }
 }

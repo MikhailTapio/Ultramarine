@@ -1,18 +1,17 @@
 package com.voxelutopia.ultramarine.client.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.voxelutopia.ultramarine.data.recipe.WoodworkingRecipe;
 import com.voxelutopia.ultramarine.world.block.menu.WoodworkingWorkbenchMenu;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -38,50 +37,53 @@ public class WoodworkingWorkbenchScreen extends AbstractContainerScreen<Woodwork
         --this.titleLabelY;
     }
 
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+    @Override
+    public void render(GuiGraphics pGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        super.render(pGraphics, pMouseX, pMouseY, pPartialTick);
+        this.renderTooltip(pGraphics, pMouseX, pMouseY);
     }
 
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pX, int pY) {
-        this.renderBackground(pPoseStack);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, BG_LOCATION);
+    @Override
+    protected void renderBg(GuiGraphics pGraphics, float pPartialTick, int pX, int pY) {
+        this.renderBackground(pGraphics);
+        pGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         int i = this.leftPos;
         int j = this.topPos;
-        this.blit(pPoseStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
-        int k = (int)(41.0F * this.scrollOffs);
-        this.blit(pPoseStack, i + 119, j + 15 + k, 176 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
+        pGraphics.blit(BG_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        int k = (int) (41.0F * this.scrollOffs);
+        pGraphics.blit(BG_LOCATION, i + 119, j + 15 + k, 176 + (this.isScrollBarActive() ? 0 : 12), 0, 12, 15);
         int l = this.leftPos + 52;
         int i1 = this.topPos + 14;
         int j1 = this.startIndex + 12;
-        this.renderButtons(pPoseStack, pX, pY, l, i1, j1);
-        this.renderRecipes(l, i1, j1);
+        this.renderButtons(pGraphics, pX, pY, l, i1, j1);
+        this.renderRecipes(pGraphics, l, i1, j1);
     }
 
-    protected void renderTooltip(PoseStack pPoseStack, int pX, int pY) {
-        super.renderTooltip(pPoseStack, pX, pY);
+    @Override
+    protected void renderTooltip(GuiGraphics pGraphics, int pX, int pY) {
+        super.renderTooltip(pGraphics, pX, pY);
         if (this.displayRecipes) {
             int i = this.leftPos + 52;
             int j = this.topPos + 14;
             int k = this.startIndex + 12;
             List<WoodworkingRecipe> list = this.menu.getRecipes();
 
-            for(int l = this.startIndex; l < k && l < this.menu.getNumRecipes(); ++l) {
+            Level level = Minecraft.getInstance().level;
+            if (level == null) return;
+            for (int l = this.startIndex; l < k && l < this.menu.getNumRecipes(); ++l) {
                 int i1 = l - this.startIndex;
                 int j1 = i + i1 % 4 * 16;
                 int k1 = j + i1 / 4 * 18 + 2;
                 if (pX >= j1 && pX < j1 + 16 && pY >= k1 && pY < k1 + 18) {
-                    this.renderTooltip(pPoseStack, list.get(l).getResultItem(), pX, pY);
+                    pGraphics.renderTooltip(font, list.get(l).getResultItem(level.registryAccess()), pX, pY);
                 }
             }
         }
 
     }
 
-    private void renderButtons(PoseStack pPoseStack, int pMouseX, int pMouseY, int pX, int pY, int pLastVisibleElementIndex) {
-        for(int i = this.startIndex; i < pLastVisibleElementIndex && i < this.menu.getNumRecipes(); ++i) {
+    private void renderButtons(GuiGraphics pGraphics, int pMouseX, int pMouseY, int pX, int pY, int pLastVisibleElementIndex) {
+        for (int i = this.startIndex; i < pLastVisibleElementIndex && i < this.menu.getNumRecipes(); ++i) {
             int j = i - this.startIndex;
             int k = pX + j % 4 * 16;
             int l = j / 4;
@@ -93,20 +95,21 @@ public class WoodworkingWorkbenchScreen extends AbstractContainerScreen<Woodwork
                 j1 += 36;
             }
 
-            this.blit(pPoseStack, k, i1 - 1, 0, j1, 16, 18);
+            pGraphics.blit(BG_LOCATION, k, i1 - 1, 0, j1, 16, 18);
         }
 
     }
 
-    private void renderRecipes(int pLeft, int pTop, int pRecipeIndexOffsetMax) {
+    private void renderRecipes(GuiGraphics pGraphics, int pLeft, int pTop, int pRecipeIndexOffsetMax) {
         List<WoodworkingRecipe> list = this.menu.getRecipes();
-
-        for(int i = this.startIndex; i < pRecipeIndexOffsetMax && i < this.menu.getNumRecipes(); ++i) {
+        Level level = Minecraft.getInstance().level;
+        if (level == null) return;
+        for (int i = this.startIndex; i < pRecipeIndexOffsetMax && i < this.menu.getNumRecipes(); ++i) {
             int j = i - this.startIndex;
             int k = pLeft + j % 4 * 16;
             int l = j / 4;
             int i1 = pTop + l * 18 + 2;
-            this.minecraft.getItemRenderer().renderAndDecorateItem(list.get(i).getResultItem(), k, i1);
+            pGraphics.renderItem(list.get(i).getResultItem(level.registryAccess()), k, i1);
         }
 
     }
@@ -124,7 +127,8 @@ public class WoodworkingWorkbenchScreen extends AbstractContainerScreen<Woodwork
                 double d1 = pMouseY - (double)(j + i1 / 4 * 18);
                 if (d0 >= 0.0D && d1 >= 0.0D && d0 < 16.0D && d1 < 18.0D && this.menu.clickMenuButton(this.minecraft.player, l)) {
                     Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0F));
-                    this.minecraft.gameMode.handleInventoryButtonClick((this.menu).containerId, l);
+                    if (minecraft.gameMode != null)
+                        minecraft.gameMode.handleInventoryButtonClick((this.menu).containerId, l);
                     return true;
                 }
             }

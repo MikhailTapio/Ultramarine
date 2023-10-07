@@ -4,7 +4,7 @@ import com.voxelutopia.ultramarine.data.registry.BlockRegistry;
 import com.voxelutopia.ultramarine.data.registry.ItemRegistry;
 import com.voxelutopia.ultramarine.world.block.BaseFence;
 import com.voxelutopia.ultramarine.world.block.BaseWall;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -28,14 +28,15 @@ public class ModItemModelProvider extends ItemModelProvider {
         BlockRegistry.BLOCKS.getEntries().stream()
                 .filter(blockRegistryObject -> (
                         blockRegistryObject.get() instanceof BaseWall ||
-                        blockRegistryObject.get() instanceof BaseFence
+                                blockRegistryObject.get() instanceof BaseFence
                 ))
                 .forEach(NON_SIMPLE_BLOCKS::add);
     }
 
-    public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
-        super(generator, DataGenerators.MOD_ID, existingFileHelper);
+    public ModItemModelProvider(PackOutput pOutput, ExistingFileHelper existingFileHelper) {
+        super(pOutput, DataGenerators.MOD_ID, existingFileHelper);
     }
+
     @Override
     protected void registerModels() {
         BlockRegistry.BLOCKS.getEntries().stream()

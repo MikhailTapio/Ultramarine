@@ -1,5 +1,6 @@
 package com.voxelutopia.ultramarine.data;
 
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.RegistryObject;
@@ -40,7 +41,11 @@ public enum ModCreativeTab {
         return tab;
     }
 
-    public static void putItemInSet(RegistryObject<Item> item, ModCreativeTab tab){
+    public static void putItemInSet(RegistryObject<Item> item, ModCreativeTab tab) {
         itemSets.get(tab).add(item);
+    }
+
+    public static Set<RegistryObject<Item>> getItemSet(ModCreativeTab tab) {
+        return ImmutableSet.copyOf(itemSets.get(tab));
     }
 }
