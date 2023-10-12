@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "building",
   "ingredients": [
     {
       "item": "minecraft:cobblestone"
@@ -15,7 +16,7 @@
     }
   ],
   "result": {
-    "item": "ultramarine:variegated_rocks",
-    "count": 4
+    "count": 4,
+    "item": "ultramarine:variegated_rocks"
   }
 }

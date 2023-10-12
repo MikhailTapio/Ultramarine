@@ -1,9 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "C",
-    "P"
-  ],
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:white_candle"
@@ -12,7 +9,12 @@
       "item": "ultramarine:jade_parts"
     }
   },
+  "pattern": [
+    "C",
+    "P"
+  ],
   "result": {
     "item": "ultramarine:jade_candlestick"
-  }
+  },
+  "show_notification": true
 }

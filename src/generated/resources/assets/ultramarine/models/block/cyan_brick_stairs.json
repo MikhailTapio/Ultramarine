@@ -1,8 +1,9 @@
 {
   "parent": "minecraft:block/stairs",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "side": "ultramarine:block/cyan_bricks",
     "bottom": "ultramarine:block/cyan_bricks",
+    "side": "ultramarine:block/cyan_bricks",
     "top": "ultramarine:block/cyan_bricks"
   }
 }

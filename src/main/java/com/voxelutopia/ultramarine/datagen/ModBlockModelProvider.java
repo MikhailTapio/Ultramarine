@@ -32,7 +32,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 @SuppressWarnings("unused")
 public class ModBlockModelProvider extends BlockStateProvider {
-    // TODO: Needs update for new RenderType options
+    // TODO: Will need an update for new RenderType options, if ItemBlockRenderTypes#setRenderLayer is eventually removed
     public static final String BLOCK = "block/";
     private final Map<Pair<Direction, Direction>, Integer> rotations = Map.of(
             Pair.of(Direction.NORTH, Direction.EAST), 0,

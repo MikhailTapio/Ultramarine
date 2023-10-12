@@ -1,8 +1,9 @@
 {
   "parent": "minecraft:block/stairs",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "side": "ultramarine:block/black_bricks",
     "bottom": "ultramarine:block/black_bricks",
+    "side": "ultramarine:block/black_bricks",
     "top": "ultramarine:block/black_bricks"
   }
 }

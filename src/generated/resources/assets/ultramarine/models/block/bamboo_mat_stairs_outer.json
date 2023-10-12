@@ -1,8 +1,9 @@
 {
   "parent": "minecraft:block/outer_stairs",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "side": "ultramarine:block/bamboo_mat",
     "bottom": "ultramarine:block/bamboo_mat",
+    "side": "ultramarine:block/bamboo_mat",
     "top": "ultramarine:block/bamboo_mat"
   }
 }

@@ -1,0 +1,10 @@
+// 1.20.1	2023-10-12T11:01:14.8018112	ultramarine Block Tags
+04add8ab24507ad4102b5d893298df60c467d59c data/minecraft/tags/blocks/fences.json
+0ab6abccd9d1b550550505393f71c2538bf08fb7 data/minecraft/tags/blocks/mineable/axe.json
+c15c89703674ee9eb228e00c249c247cf397b5aa data/minecraft/tags/blocks/mineable/hoe.json
+d1f3ea68c426e1c66298504b795464da5ca2e2cf data/minecraft/tags/blocks/mineable/pickaxe.json
+2f9da4dfcf088090f0215ebfdf0012c49c3117fa data/minecraft/tags/blocks/needs_iron_tool.json
+14ffec73c5a3a3250e642bb93f53468130bbd8c2 data/minecraft/tags/blocks/needs_stone_tool.json
+1970914c35ec5918f147183295e1778ab9228679 data/minecraft/tags/blocks/planks.json
+310314e6f7eaf71e76667d537771ff5301fcbd2e data/minecraft/tags/blocks/walls.json
+5ef5bfac63aaff185224b7d91c0e1ebf0fdf429d data/ultramarine/tags/blocks/mineable_with_shears.json

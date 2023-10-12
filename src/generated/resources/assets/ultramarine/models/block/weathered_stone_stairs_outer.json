@@ -1,8 +1,9 @@
 {
   "parent": "minecraft:block/outer_stairs",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "side": "ultramarine:block/weathered_stone",
     "bottom": "ultramarine:block/weathered_stone",
+    "side": "ultramarine:block/weathered_stone",
     "top": "ultramarine:block/weathered_stone"
   }
 }

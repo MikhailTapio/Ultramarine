@@ -20,7 +20,7 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput output = generator.getPackOutput(); // TODO: Use no arg or pass in a MOD_ID?
+        PackOutput output = generator.getPackOutput(); // Use no arg for consistency previous versions
         ExistingFileHelper fh = event.getExistingFileHelper();
         BlockTagsProvider blockTags = new ModBlockTagProvider(output, event.getLookupProvider(), fh);
         generator.addProvider(event.includeServer(), blockTags);

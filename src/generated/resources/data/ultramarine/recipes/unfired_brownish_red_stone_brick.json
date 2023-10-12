@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "building",
   "ingredients": [
     {
       "item": "ultramarine:unfired_clay_brick"
@@ -24,7 +25,7 @@
     }
   ],
   "result": {
-    "item": "ultramarine:unfired_brownish_red_stone_brick",
-    "count": 6
+    "count": 6,
+    "item": "ultramarine:unfired_brownish_red_stone_brick"
   }
 }

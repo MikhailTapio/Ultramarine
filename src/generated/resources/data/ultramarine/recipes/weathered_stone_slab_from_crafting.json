@@ -1,15 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BBB"
-  ],
+  "category": "building",
   "key": {
     "B": {
       "item": "ultramarine:weathered_stone"
     }
   },
+  "pattern": [
+    "BBB"
+  ],
   "result": {
-    "item": "ultramarine:weathered_stone_slab",
-    "count": 6
-  }
+    "count": 6,
+    "item": "ultramarine:weathered_stone_slab"
+  },
+  "show_notification": true
 }

@@ -1,14 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XDX",
-    "XCX",
-    " F "
-  ],
+  "category": "misc",
   "key": {
-    "X": {
-      "item": "ultramarine:xuan_paper"
-    },
     "C": {
       "tag": "minecraft:candles"
     },
@@ -17,9 +10,18 @@
     },
     "F": {
       "item": "ultramarine:wooden_frame"
+    },
+    "X": {
+      "item": "ultramarine:xuan_paper"
     }
   },
+  "pattern": [
+    "XDX",
+    "XCX",
+    " F "
+  ],
   "result": {
     "item": "ultramarine:white_sky_lantern"
-  }
+  },
+  "show_notification": true
 }
